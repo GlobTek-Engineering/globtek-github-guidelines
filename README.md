@@ -1,0 +1,1 @@
+# globtek-github-guidelines
