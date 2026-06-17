@@ -40,10 +40,10 @@ To replace confusing email chains with real version control.
 * Lost test documents for reviewing old data
 
 ### The new way
-
+```
 main ──●──────────────────────────────────────────────●──────────────► 🏷️ EVT2 Release
             └─● ECR-evt1-to-evt2        Tim's change, tracked  ─────────┘
-
+```
 **With GitHub we get:**
 - ✅ One place for all engineering files — no more hunting through inboxes
 - ✅ Full history of every change, who made it, and why
