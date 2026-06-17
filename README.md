@@ -7,7 +7,7 @@
 
 ---
 
-**[① What is Git & GitHub?](#1--what-is-git--github) · [② Why are we using it?](#2--why-are-we-using-it) · [③ Getting Set Up](#3--getting-set-up) · [④ Core Concepts](#4--core-concepts) · [⑤ Daily Workflow](#5--daily-workflow) · [⑥ Quick Reference](#6--quick-reference) · [⑦ Git LFS](#7--advanced-topics--git-lfs-for-altium--excel-files)**
+**[① What is Git & GitHub?](#1--what-is-git--github) · [② Why are we using it?](#2--why-are-we-using-it) · [③ Getting Set Up](#3--getting-set-up) · [④ Core Concepts](#4--core-concepts) · [⑤ Daily Workflow](#5--daily-workflow) · [⑥ Quick Reference](#6--quick-reference) · [⑦ Advanced Topics](#7--advanced-topics)**
 
 </div>
 
@@ -455,7 +455,11 @@ Successfully rebased and updated refs/heads/main.
 
 ---
 
-## 7 · Advanced Topics — Git LFS for Altium & Excel Files
+## 7 · Advanced Topics
+
+---
+
+### 7a · Git LFS for Altium & Excel Files
 
 ### What is a Binary File?
 
@@ -589,6 +593,59 @@ Unlocked schematics/GTM965500P_main.SchDoc
 | `git lfs locks` | See all currently locked files and who holds them |
 | `git lfs lock <file>` | Lock a file before you start editing |
 | `git lfs unlock <file>` | Release your lock after pushing your changes |
+
+<br>
+
+---
+
+### 7b · Repo Template Files
+
+When setting up a new repository, two configuration files should always be included. These live in the root of the repo and tell Git how to handle files correctly from the start.
+
+---
+
+#### `.gitattributes`
+
+Tells Git how to treat specific file types — in our case, which files should be handled by LFS.
+
+Our standard `.gitattributes`:
+
+```
+*.xlsx filter=lfs diff=lfs merge=lfs -text
+*.PcbDoc filter=lfs diff=lfs merge=lfs -text
+*.SchDoc filter=lfs diff=lfs merge=lfs -text
+*.PrjPcb filter=lfs diff=lfs merge=lfs -text
+*.PrjPcbStructure filter=lfs diff=lfs merge=lfs -text
+```
+
+Every line follows the same pattern:
+
+| Part | What it means |
+|---|---|
+| `*.xlsx` | Match all files with this extension |
+| `filter=lfs` | Store this file in LFS instead of directly in the repo |
+| `diff=lfs` | Use LFS to handle version comparisons |
+| `merge=lfs` | Use LFS when resolving merge conflicts |
+| `-text` | Treat this as a binary file — don't try to read it as text |
+
+> This file should be committed to every new repo **before** anyone adds Altium or Excel files. Adding it after the fact requires migrating existing files into LFS.
+
+---
+
+#### `.gitignore`
+
+Tells Git which files and folders to completely ignore — they will never be committed or pushed to GitHub.
+
+Our standard `.gitignore`:
+
+```
+# Ignore the History folder from the Altium project
+Altium/History/
+```
+
+Altium automatically generates a `History/` folder that stores local backups. These files are large, auto-generated, and have no value in a shared repo — so we exclude them.
+
+> If there are other auto-generated folders or local-only files you never want committed, add them here.
 
 <br>
 
