@@ -7,9 +7,28 @@
 
 ---
 
-**[① What is Git & GitHub?](#1--what-is-git--github) · [② Why are we using it?](#2--why-are-we-using-it) · [③ Getting Set Up](#3--getting-set-up) · [④ Core Concepts](#4--core-concepts) · [⑤ Daily Workflow](#5--daily-workflow) · [⑥ Quick Reference](#6--quick-reference)**
+**[① What is Git & GitHub?](#1--what-is-git--github) · [② Why are we using it?](#2--why-are-we-using-it) · [③ Getting Set Up](#3--getting-set-up) · [④ Core Concepts](#4--core-concepts) · [⑤ Daily Workflow](#5--daily-workflow) · [⑥ Quick Reference](#6--quick-reference) · [⑦ Git LFS](#7--advanced-topics--git-lfs-for-altium--excel-files)**
 
 </div>
+
+---
+
+## Command Reference
+
+| Command | What it does | Section |
+|---|---|---|
+| `git clone <url>` | Download a repo to your machine for the first time | [Getting Set Up](#3--getting-set-up) |
+| `git checkout -b <name>` | Create a new branch and switch to it | [Core Concepts](#4--core-concepts) |
+| `git checkout <branch>` | Switch to an existing branch | [Daily Workflow](#5--daily-workflow) |
+| `git add .` | Stage all changed files for your next commit | [Daily Workflow](#5--daily-workflow) |
+| `git status` | See what's changed, what's staged, and what branch you're on | [Daily Workflow](#5--daily-workflow) |
+| `git commit -m "message"` | Save a labeled snapshot of your staged files | [Daily Workflow](#5--daily-workflow) |
+| `git push origin <branch>` | Upload your branch and commits to GitHub | [Daily Workflow](#5--daily-workflow) |
+| `git fetch` | Check for remote updates without changing any local files | [Daily Workflow](#5--daily-workflow) |
+| `git pull --rebase` | Pull the latest from GitHub and sync your local machine | [Daily Workflow](#5--daily-workflow) |
+| `git lfs locks` | See all currently locked files and who holds them | [Git LFS](#7--advanced-topics--git-lfs-for-altium--excel-files) |
+| `git lfs lock <file>` | Lock a binary file before editing in Altium or Excel | [Git LFS](#7--advanced-topics--git-lfs-for-altium--excel-files) |
+| `git lfs unlock <file>` | Release your lock after pushing your changes | [Git LFS](#7--advanced-topics--git-lfs-for-altium--excel-files) |
 
 ---
 
@@ -431,6 +450,145 @@ Successfully rebased and updated refs/heads/main.
 | `git push origin <branch>` | Upload your branch to GitHub |
 | `git fetch` | Check for remote updates (nothing changes yet) |
 | `git pull --rebase` | Pull latest from GitHub and sync your machine |
+
+<br>
+
+---
+
+## 7 · Advanced Topics — Git LFS for Altium & Excel Files
+
+### What is a Binary File?
+
+Most files in a Git repo are **text files** — things like code, markdown, and CSV. Git is very good at tracking text because it can read the file line by line and show you exactly what changed.
+
+**Binary files** are different. They are files that Git cannot read as plain text — instead they are stored as raw data. Examples include:
+
+| File type | Examples |
+|---|---|
+| Altium design files | `.SchDoc`, `.PcbDoc`, `.PrjPcb`, `.IntLib` |
+| Excel spreadsheets | `.xlsx`, `.xlsm` |
+| PDFs | `.pdf` |
+| Images | `.png`, `.jpg` |
+
+The problem with binaries in a standard Git repo is that every time you save a new version, Git stores the **entire file again** from scratch — it can't just save what changed. A 10 MB Altium board file committed 20 times becomes 200 MB of repo history very quickly.
+
+---
+
+### What is Git LFS?
+
+**Git LFS (Large File Storage)** is an extension that solves this. Instead of storing the full binary file inside the repo every commit, Git LFS:
+
+1. Stores the actual binary file on a separate LFS server
+2. Puts a small text **pointer** in the repo in its place
+3. Downloads the real file automatically when you need it
+
+```
+Without LFS:   repo stores full 10 MB .PcbDoc every commit  ──►  repo bloats fast
+With LFS:      repo stores a tiny pointer  ──►  LFS server holds the real file
+```
+
+For a team working with Altium schematics, PCB layouts, and Excel BOMs, **LFS keeps the repo fast and manageable.**
+
+---
+
+### What is File Locking?
+
+Binary files have another problem that text files don't: **they can't be merged.**
+
+If two engineers open the same `.PcbDoc` and both make changes, Git has no way to combine them — unlike a text file where it can merge line by line. One person's work will overwrite the other's.
+
+**Git LFS file locking** solves this by letting you claim exclusive edit rights on a file before you start working on it. While you hold the lock, no one else can push changes to that file.
+
+> Think of it like checking out a physical document from a filing cabinet — while you have it, no one else can edit it.
+
+---
+
+### LFS Commands
+
+#### Check what's currently locked
+
+Before you start editing a binary file, check if someone else already has it locked.
+
+```bash
+git lfs locks
+```
+
+**What you'll see if files are locked:**
+
+```
+schematics/GTM965500P_main.SchDoc    tim       ID:847362
+docs/BOM_rev3.xlsx                   cesar     ID:847401
+```
+
+| Column | What it means |
+|---|---|
+| File path | Which file is locked |
+| Username | Who currently holds the lock |
+| ID | The unique ID of the lock — needed to force-unlock if necessary |
+
+**What you'll see if nothing is locked:**
+
+```
+(no output)
+```
+
+✅ If the file you need isn't in the list, you're clear to lock and edit it.
+
+---
+
+#### Lock a file before editing
+
+```bash
+git lfs lock schematics/GTM965500P_main.SchDoc
+```
+
+**What you'll see:**
+
+```
+Locked schematics/GTM965500P_main.SchDoc
+```
+
+✅ The file is now yours to edit. Your teammates will see your name when they run `git lfs locks`.
+
+> **Always lock before opening** an Altium or Excel file you intend to edit. Lock first, then open the application.
+
+---
+
+#### Unlock a file when you're done
+
+After you've committed and pushed your changes, release the lock so your teammates can edit the file.
+
+```bash
+git lfs unlock schematics/GTM965500P_main.SchDoc
+```
+
+**What you'll see:**
+
+```
+Unlocked schematics/GTM965500P_main.SchDoc
+```
+
+✅ The file is now available for the rest of the team.
+
+---
+
+### LFS Quick Rules
+
+- ✅ Always run `git lfs locks` before opening a binary file you plan to edit
+- ✅ Lock the file first, then open it in Altium or Excel
+- ✅ Unlock as soon as you've pushed your changes — don't hold locks overnight
+- ❌ Never edit a file that someone else has locked — wait or check with them first
+- ❌ Don't forget to unlock — a stale lock blocks the whole team
+
+---
+
+### LFS Quick Reference
+
+| Command | What it does |
+|---|---|
+| `git lfs locks` | See all currently locked files and who holds them |
+| `git lfs lock <file>` | Lock a file before you start editing |
+| `git lfs unlock <file>` | Release your lock after pushing your changes |
 
 <br>
 
