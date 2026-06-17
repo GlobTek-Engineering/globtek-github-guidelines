@@ -31,19 +31,18 @@
 
 ## 2 · Why Are We Using It?
 
+To replace confusing email chains with real version control.
+
 ### The old way
 
-```
-RE: RE: RE: RE: FWD: GTM965500P_schematic_FINAL_v3_TIM_EDITED_USE_THIS_ONE.pdf
-```
+* Long email chains where information is almost impossible to recover and often forgotten
+* FINAL FINAL FINAL engineering documents
+* Lost test documents for reviewing old data
 
 ### The new way
 
-```
-main ──●──────────────────────────────► latest, always clean
-            └─● ECR-evt1-to-evt2        Tim's change, tracked
-                   └─● pcb-changes      Sarah's change, tracked
-```
+main ──●──────────────────────────────────────────────●──────────────► 🏷️ EVT2 Release
+            └─● ECR-evt1-to-evt2        Tim's change, tracked  ─────────┘
 
 **With GitHub we get:**
 - ✅ One place for all engineering files — no more hunting through inboxes
