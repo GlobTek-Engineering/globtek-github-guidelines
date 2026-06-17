@@ -144,7 +144,7 @@ git checkout -b <your-branch-name>
 
 - ✅ Always create your own branch before making changes
 - ✅ Commit often with clear messages
-- ❌ Never work directly on `main`
+- ❌ Never work directly on `main` unless you are doing it intentionally
 
 <br>
 
