@@ -92,6 +92,24 @@ Cloning downloads a full copy of a repository so you can work on it locally.
 git clone https://github.com/GlobTek-Engineering/<repo-name>
 ```
 
+**What you'll see:**
+
+```
+Cloning into 'GTM965500P'...
+remote: Enumerating objects: 84, done.
+remote: Counting objects: 100% (84/84), done.
+remote: Compressing objects: 100% (52/52), done.
+Receiving objects: 100% (84/84), 2.34 MiB | 3.1 MiB/s, done.
+```
+
+| Line | What it means |
+|---|---|
+| `Cloning into 'GTM965500P'...` | Git is creating a new folder with that name on your machine |
+| `Enumerating objects: 84` | There are 84 files/commits it needs to download |
+| `2.34 MiB \| 3.1 MiB/s` | Total size downloaded and your download speed |
+
+✅ When it finishes with no errors, you're good. A new folder will appear in your current directory.
+
 <br>
 
 ---
@@ -133,8 +151,16 @@ main ─────────────────────────
 
 **Create and switch to your branch:**
 ```bash
-git checkout -b <your-branch-name>
+git checkout -b ECR-evt1-to-evt2
 ```
+
+**What you'll see:**
+
+```
+Switched to a new branch 'ECR-evt1-to-evt2'
+```
+
+✅ That's it. You're now on your own branch and safe to make changes.
 
 <br>
 
@@ -158,19 +184,117 @@ git checkout -b <your-branch-name>
 git checkout -b ECR-evt1-to-evt2    # create your branch and switch to it
 ```
 
+```
+Switched to a new branch 'ECR-evt1-to-evt2'
+```
+
 <br>
 
 ### Making & Saving Changes
 
-Make your edits to the files, then tell Git to save them:
+Make your edits to the files, then tell Git to save them.
+
+---
+
+#### `git add .`
+Stages everything you changed — tells Git "I want to include these in my next save."
 
 ```bash
-git add .                                                # stage everything you changed
-git commit -m "updated schematic for ECR evt1 to evt2"  # save a snapshot
-git push origin ECR-evt1-to-evt2                        # send it up to GitHub
+git add .
 ```
 
+`git add` is silent — if it works, nothing prints. That's normal. ✅
+
+---
+
+#### `git status`
+Shows you exactly what Git is tracking before you commit. Run this often — it's your safety check.
+
+```bash
+git status
+```
+
+**What you'll see:**
+
+```
+On branch ECR-evt1-to-evt2
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   schematics/GTM965500P_main.sch
+        new file:   test-data/evt1_results.csv
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+        modified:   docs/BOM_rev3.xlsx
+```
+
+| Section | What it means |
+|---|---|
+| `On branch ECR-evt1-to-evt2` | Confirms which branch you're on |
+| `Changes to be committed` | These files have been staged with `git add` and will be included in your next commit |
+| `modified: schematics/...` | A file that already existed and has been changed |
+| `new file: test-data/...` | A brand new file Git hasn't seen before |
+| `Changes not staged for commit` | You changed this file but haven't run `git add` yet — it will **not** be included in your commit |
+
+> If you see a file under "not staged" that you meant to include, run `git add .` again before committing.
+
+---
+
+#### `git commit -m "..."`
+Saves a labeled snapshot of everything you staged.
+
+```bash
+git commit -m "updated schematic for ECR evt1 to evt2"
+```
+
+**What you'll see:**
+
+```
+[ECR-evt1-to-evt2 3a9f2c1] updated schematic for ECR evt1 to evt2
+ 2 files changed, 47 insertions(+), 12 deletions(-)
+ create mode 100644 test-data/evt1_results.csv
+```
+
+| Line | What it means |
+|---|---|
+| `[ECR-evt1-to-evt2 3a9f2c1]` | The branch name and the short ID of this commit — every commit gets a unique ID |
+| `2 files changed` | How many files were included in this save |
+| `47 insertions(+), 12 deletions(-)` | Lines added and removed across all files |
+| `create mode 100644 test-data/...` | A new file was added to the repo for the first time |
+
 > **Commit messages matter.** Write what you actually changed — not just "update" or "fix".
+
+---
+
+#### `git push origin <branch>`
+Uploads your branch and commits to GitHub so the team can see your work.
+
+```bash
+git push origin ECR-evt1-to-evt2
+```
+
+**What you'll see:**
+
+```
+Enumerating objects: 7, done.
+Counting objects: 100% (7/7), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (4/4), 1.23 KiB | 1.23 MiB/s, done.
+Total 4 (delta 2), reused 0 (delta 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/GlobTek-Engineering/GTM965500P.git
+ * [new branch]      ECR-evt1-to-evt2 -> ECR-evt1-to-evt2
+```
+
+| Line | What it means |
+|---|---|
+| `Enumerating / Counting / Compressing` | Git is packaging your changes to send |
+| `Writing objects` | Uploading to GitHub |
+| `To https://github.com/...` | Confirms which repo it was pushed to |
+| `* [new branch] ECR-evt1-to-evt2` | This branch didn't exist on GitHub yet — Git created it remotely |
+
+✅ After this, your branch will be visible on GitHub and your team can review it.
 
 <br>
 
@@ -179,9 +303,29 @@ git push origin ECR-evt1-to-evt2                        # send it up to GitHub
 You can jump back to `main` at any time — your branch is untouched:
 
 ```bash
-git checkout main                  # switch back to main
-# look at whatever you need...
-git checkout ECR-evt1-to-evt2     # jump back to your branch
+git checkout main
+```
+
+**What you'll see:**
+
+```
+Switched to branch 'main'
+Your branch is up to date with 'origin/main'.
+```
+
+| Line | What it means |
+|---|---|
+| `Switched to branch 'main'` | You're now looking at the main branch files |
+| `Your branch is up to date with 'origin/main'` | Your local main matches what's on GitHub — nothing has changed |
+
+Then when you're ready to go back:
+
+```bash
+git checkout ECR-evt1-to-evt2
+```
+
+```
+Switched to branch 'ECR-evt1-to-evt2'
 ```
 
 <br>
@@ -196,14 +340,80 @@ someone pushed to main  ──►  main is now ahead of you
 bring those changes down  ◄─────────────┘
 ```
 
+---
+
+#### `git fetch`
+Downloads the latest information from GitHub — but doesn't change any of your files yet. Safe to run any time.
+
 ```bash
-git checkout main      # switch to main
-git fetch              # check what changed remotely (safe — doesn't touch your files yet)
-git status             # see exactly what's different
-git pull --rebase      # bring your machine up to date
+git fetch
 ```
 
-> `--rebase` keeps the history clean by replaying your changes on top of the latest `main`.
+**What you'll see:**
+
+```
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (2/2), done.
+From https://github.com/GlobTek-Engineering/GTM965500P
+   3a9f2c1..7bd4e10  main -> origin/main
+```
+
+| Line | What it means |
+|---|---|
+| `remote: Enumerating objects` | GitHub is telling you what changed |
+| `3a9f2c1..7bd4e10  main -> origin/main` | Main on GitHub has new commits since you last synced — your local copy is behind |
+
+If `git fetch` prints nothing, your local copy is already up to date. ✅
+
+---
+
+#### `git status` (after a fetch)
+
+```bash
+git status
+```
+
+```
+On branch main
+Your branch is behind 'origin/main' by 2 commits, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+```
+
+| Line | What it means |
+|---|---|
+| `behind 'origin/main' by 2 commits` | Two new saves were made on GitHub that you don't have yet |
+| `can be fast-forwarded` | There are no conflicts — Git can apply the changes cleanly |
+
+---
+
+#### `git pull --rebase`
+Pulls the latest from GitHub and applies it to your local machine.
+
+```bash
+git pull --rebase
+```
+
+**What you'll see:**
+
+```
+Successfully rebased and updated refs/heads/main.
+```
+
+Or if there were several commits to apply:
+
+```
+First, rewinding head to replay your work on top of it...
+Applying: updated BOM for rev3
+Applying: added EVT1 test results
+Successfully rebased and updated refs/heads/main.
+```
+
+| Line | What it means |
+|---|---|
+| `rewinding head to replay your work on top of it` | Git is temporarily setting aside your commits, applying the new ones from GitHub, then putting yours back on top — keeping history clean |
+| `Applying: updated BOM for rev3` | Each of your commits being re-applied one by one |
+| `Successfully rebased` | All done, no conflicts ✅ |
 
 <br>
 
@@ -216,10 +426,10 @@ git pull --rebase      # bring your machine up to date
 | `git checkout -b <name>` | Create a new branch and switch to it |
 | `git checkout main` | Switch back to main |
 | `git add .` | Stage all changed files |
+| `git status` | See what's changed and what's staged |
 | `git commit -m "message"` | Save a labeled snapshot |
 | `git push origin <branch>` | Upload your branch to GitHub |
 | `git fetch` | Check for remote updates (nothing changes yet) |
-| `git status` | See what's changed locally |
 | `git pull --rebase` | Pull latest from GitHub and sync your machine |
 
 <br>
