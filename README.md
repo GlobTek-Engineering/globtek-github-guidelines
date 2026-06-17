@@ -509,6 +509,18 @@ If two engineers open the same `.PcbDoc` and both make changes, Git has no way t
 
 ### LFS Commands
 
+#### Setting up LFS for a file type
+
+LFS needs to know which file types to track. This is configured in a file called `.gitattributes` that lives in the root of your repo. To register a file type with LFS, run:
+
+```bash
+git lfs track "*.PcbDoc"
+```
+
+This automatically adds the file type to `.gitattributes` for you. Run it once per file type when setting up a new repo, then commit the `.gitattributes` file so the whole team gets the same configuration.
+
+---
+
 #### Check what's currently locked
 
 Before you start editing a binary file, check if someone else already has it locked.
@@ -600,35 +612,7 @@ Unlocked schematics/GTM965500P_main.SchDoc
 
 ### 7b · Repo Template Files
 
-When setting up a new repository, two configuration files should always be included. These live in the root of the repo and tell Git how to handle files correctly from the start.
-
----
-
-#### `.gitattributes`
-
-Tells Git how to treat specific file types — in our case, which files should be handled by LFS.
-
-Our standard `.gitattributes`:
-
-```
-*.xlsx filter=lfs diff=lfs merge=lfs -text
-*.PcbDoc filter=lfs diff=lfs merge=lfs -text
-*.SchDoc filter=lfs diff=lfs merge=lfs -text
-*.PrjPcb filter=lfs diff=lfs merge=lfs -text
-*.PrjPcbStructure filter=lfs diff=lfs merge=lfs -text
-```
-
-Every line follows the same pattern:
-
-| Part | What it means |
-|---|---|
-| `*.xlsx` | Match all files with this extension |
-| `filter=lfs` | Store this file in LFS instead of directly in the repo |
-| `diff=lfs` | Use LFS to handle version comparisons |
-| `merge=lfs` | Use LFS when resolving merge conflicts |
-| `-text` | Treat this as a binary file — don't try to read it as text |
-
-> This file should be committed to every new repo **before** anyone adds Altium or Excel files. Adding it after the fact requires migrating existing files into LFS.
+When setting up a new repository, a few configuration files should be included in the root of the repo. These tell Git how to handle certain files and folders from the start.
 
 ---
 
