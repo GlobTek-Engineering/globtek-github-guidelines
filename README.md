@@ -1,155 +1,236 @@
-# GlobTek Engineering — GitHub Guidelines
+<div align="center">
 
-This guide covers everything you need to know to use Git and GitHub as part of the GlobTek EE team.
+# GlobTek Engineering
+## GitHub & Git — Team Guide
 
----
-
-## 1. What is Git and GitHub?
-
-- **Git** is a version control system that tracks changes to files over time on your local machine.
-- **GitHub** is a cloud platform that hosts Git repositories so teams can collaborate, review, and share work.
+*Everything you need to go from zero to version control in one page.*
 
 ---
 
-## 2. Why Are We Using It?
+**[① What is Git & GitHub?](#1--what-is-git--github) · [② Why are we using it?](#2--why-are-we-using-it) · [③ Getting Set Up](#3--getting-set-up) · [④ Core Concepts](#4--core-concepts) · [⑤ Daily Workflow](#5--daily-workflow) · [⑥ Quick Reference](#6--quick-reference)**
 
-We are replacing email chains with real version control. GitHub gives us:
-
-- A single source of truth for engineering files
-- A full history of every change and who made it
-- Structured collaboration without the confusion of emailed attachments
+</div>
 
 ---
 
-## 3. How Do I Use It?
+<br>
 
-### a) Make a GitHub Account and Join the Org
+## 1 · What is Git & GitHub?
 
-1. Create a free account at [github.com](https://github.com)
-2. Ask your team lead to add you to the [GlobTek-Engineering](https://github.com/GlobTek-Engineering) organization
+> Think of **Git** as a time machine for your files, and **GitHub** as the shared drive everyone on the team connects to.
 
-### b) Set Up Git on Your Local Machine
+| | Git | GitHub |
+|---|---|---|
+| **Lives** | On your computer | In the cloud |
+| **Does** | Tracks every change you make | Hosts the shared repo for the whole team |
+| **Think of it as** | Your local save history | The team's shared project folder |
 
-#### Install Git for Windows (with posh-git for a better terminal experience)
-
-1. Download and install [Git for Windows](https://git-scm.com/download/win)
-2. Open **PowerShell** and install the `posh-git` module:
-   ```powershell
-   Install-Module posh-git -Scope CurrentUser
-   ```
-3. Sign into your GitHub account when prompted
-4. Add `posh-git` to your PowerShell profile so it loads automatically:
-   ```powershell
-   notepad $PROFILE
-   ```
-   Add this line to the file that opens, then save it:
-   ```powershell
-   Import-Module posh-git
-   ```
-
-> After this, your terminal will show your current Git branch and status in the prompt automatically.
-
-### c) What Will I Use It For?
-
-- Storing engineering design files
-- Maintaining organized version control for documents, ECRs, and more
-- Managing test data and project tracking with GitHub Projects instead of email chains
+<br>
 
 ---
 
-## 4. Practicing Version Control Concepts
+## 2 · Why Are We Using It?
 
-### ① Clone a Repository
+### The old way
 
-Before you can work on a project, you need a local copy of it.
+```
+RE: RE: RE: RE: FWD: GTM965500P_schematic_FINAL_v3_TIM_EDITED_USE_THIS_ONE.pdf
+```
 
-| Concept | What it means |
+### The new way
+
+```
+main ──●──────────────────────────────► latest, always clean
+            └─● ECR-evt1-to-evt2        Tim's change, tracked
+                   └─● pcb-changes      Sarah's change, tracked
+```
+
+**With GitHub we get:**
+- ✅ One place for all engineering files — no more hunting through inboxes
+- ✅ Full history of every change, who made it, and why
+- ✅ The ability to go back to any version at any time
+- ✅ Project tracking built right into the repo
+
+<br>
+
+---
+
+## 3 · Getting Set Up
+
+### Step 1 — Create a GitHub Account & Join the Org
+
+1. Sign up at **[github.com](https://github.com)**
+2. Ask your team lead to add you to **[GlobTek-Engineering](https://github.com/GlobTek-Engineering)**
+
+<br>
+
+### Step 2 — Install Git + posh-git on Your Machine
+
+> **posh-git** makes your PowerShell terminal show your current branch and status automatically — it makes Git much easier to use day-to-day.
+
+**Open PowerShell and run these one at a time:**
+
+```powershell
+# 1. Install posh-git
+Install-Module posh-git -Scope CurrentUser
+
+# 2. Open your PowerShell profile in Notepad
+notepad $PROFILE
+
+# 3. Add this line to the file that opens, then save & close it
+Import-Module posh-git
+```
+
+✅ **Done!** Restart PowerShell and your terminal will now show your branch name automatically.
+
+<br>
+
+### Step 3 — Clone a Repo to Your Machine
+
+Cloning downloads a full copy of a repository so you can work on it locally.
+
+```bash
+git clone https://github.com/GlobTek-Engineering/<repo-name>
+```
+
+<br>
+
+---
+
+## 4 · Core Concepts
+
+### What is a Repository?
+
+A **repository (repo)** is a project folder tracked by Git. It contains:
+
+| What's inside | What it is |
 |---|---|
-| **Repository (repo)** | A folder tracked by Git — contains all files, history, and branches |
-| **Branch** | A parallel version of the repo where you can make changes safely |
-| **Cloning** | Downloading a copy of a remote GitHub repo to your local machine |
+| Files | Your actual engineering files |
+| Branches | Parallel versions for different changes |
+| History | Every commit ever made |
+| Releases | Stable, tagged versions |
+| Projects | Task boards for tracking work |
 
-**What you can see on GitHub:**
-- Files & folders
-- Releases
-- Branches
-- Projects
-- Downloading the repo as a ZIP
+<br>
 
----
+### What is a Branch?
 
-### ② Being Conscious of Your Git Repo
+> A branch lets you make changes **without touching the main files** until you're ready.
 
-> You are no longer working on a project by yourself. This is a **shared repository** that needs special consideration.
-
-If you want to work on files as if they are your own, **create your own branch** first. Name the branch after whatever the reason for branching is — you can always change it later.
-
-**Branch naming examples:**
 ```
-tims-branch
-ECR-evt1-to-evt2
-pcb-changes
-updating-transformer-footprint
+main ──────────────────────────────────►  always stable
+         │
+         └──► your-branch ──────────►  your sandbox
 ```
 
-To create and switch to your new branch:
+**Name your branch after what you're doing:**
+
+```
+✅  tims-branch
+✅  ECR-evt1-to-evt2
+✅  pcb-changes
+✅  updating-transformer-footprint
+```
+
+**Create and switch to your branch:**
 ```bash
-git checkout -b <branch-name>
+git checkout -b <your-branch-name>
 ```
+
+<br>
+
+### This is a Shared Repo — Be Aware
+
+> You are **no longer working alone.** Every push affects the team.
+
+- ✅ Always create your own branch before making changes
+- ✅ Commit often with clear messages
+- ❌ Never work directly on `main`
+
+<br>
 
 ---
 
-### ③ Make Your Changes
+## 5 · Daily Workflow
 
-Once you're on your own branch, make your edits freely.
-
-If you ever want to see what the original files looked like, you can switch back to `main` at any time:
-```bash
-git checkout main
-```
-
----
-
-### ④ Save and Share Your Work
-
-When you're ready to save your progress and push it to GitHub:
-
-```bash
-git add .
-git commit -m "describe what you changed here"
-git push origin <branch-name>
-```
-
----
-
-### ⑤ What If Main Changed While You Were Working?
-
-While you were on your branch, someone else may have pushed updates to `main`. Here's how to check and sync:
+### Starting Work
 
 ```bash
-git checkout main   # switch back to main
-git fetch           # download any updates from GitHub (doesn't change your files yet)
-git status          # see what changed and what's different
-git pull --rebase   # apply those changes to your local machine
+git checkout -b ECR-evt1-to-evt2    # create your branch and switch to it
 ```
 
-> `git pull --rebase` replays your local changes on top of the updated `main`, keeping the history clean.
+<br>
+
+### Making & Saving Changes
+
+Make your edits to the files, then tell Git to save them:
+
+```bash
+git add .                                                # stage everything you changed
+git commit -m "updated schematic for ECR evt1 to evt2"  # save a snapshot
+git push origin ECR-evt1-to-evt2                        # send it up to GitHub
+```
+
+> **Commit messages matter.** Write what you actually changed — not just "update" or "fix".
+
+<br>
+
+### Need to See the Original Files?
+
+You can jump back to `main` at any time — your branch is untouched:
+
+```bash
+git checkout main                  # switch back to main
+# look at whatever you need...
+git checkout ECR-evt1-to-evt2     # jump back to your branch
+```
+
+<br>
+
+### What If Main Changed While You Were Working?
+
+This happens often on a shared repo. Here's how to sync up:
+
+```
+someone pushed to main  ──►  main is now ahead of you
+                                        │
+bring those changes down  ◄─────────────┘
+```
+
+```bash
+git checkout main      # switch to main
+git fetch              # check what changed remotely (safe — doesn't touch your files yet)
+git status             # see exactly what's different
+git pull --rebase      # bring your machine up to date
+```
+
+> `--rebase` keeps the history clean by replaying your changes on top of the latest `main`.
+
+<br>
 
 ---
 
-## 5. Quick Reference
+## 6 · Quick Reference
 
 | Command | What it does |
 |---|---|
-| `git checkout -b <name>` | Create and switch to a new branch |
-| `git checkout main` | Switch back to the main branch |
+| `git checkout -b <name>` | Create a new branch and switch to it |
+| `git checkout main` | Switch back to main |
 | `git add .` | Stage all changed files |
-| `git commit -m "message"` | Save a snapshot with a description |
+| `git commit -m "message"` | Save a labeled snapshot |
 | `git push origin <branch>` | Upload your branch to GitHub |
-| `git fetch` | Check for remote updates (safe, no changes yet) |
-| `git status` | See what files have changed |
-| `git pull --rebase` | Sync your local copy with the latest from GitHub |
+| `git fetch` | Check for remote updates (nothing changes yet) |
+| `git status` | See what's changed locally |
+| `git pull --rebase` | Pull latest from GitHub and sync your machine |
+
+<br>
 
 ---
 
-*Questions? Reach out to your team lead or open an issue in this repository.*
+<div align="center">
+
+**Questions?** Open an issue in this repo or ask your team lead.
+
+*GlobTek Engineering · [globtek.com](https://www.globtek.com)*
+
+</div>
