@@ -576,6 +576,7 @@ After you've committed and pushed your changes, release the lock so your teammat
 
 ```bash
 git lfs unlock schematics/GTM965500P_main.SchDoc
+git lfs unlcok --id=XXXXXX
 ```
 
 **What you'll see:**
