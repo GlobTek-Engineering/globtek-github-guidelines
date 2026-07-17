@@ -23,7 +23,7 @@
 | `git add .` | Stage all changed files for your next commit | [Daily Workflow](#5--daily-workflow) |
 | `git status` | See what's changed, what's staged, and what branch you're on | [Daily Workflow](#5--daily-workflow) |
 | `git commit -m "message"` | Save a labeled snapshot of your staged files | [Daily Workflow](#5--daily-workflow) |
-| `git push origin <branch>` | Upload your branch and commits to GitHub | [Daily Workflow](#5--daily-workflow) |
+| `git push -u origin <branch>` | Upload your branch and commits to GitHub | [Daily Workflow](#5--daily-workflow) |
 | `git fetch` | Check for remote updates without changing any local files | [Daily Workflow](#5--daily-workflow) |
 | `git pull --rebase` | Pull the latest from GitHub and sync your local machine | [Daily Workflow](#5--daily-workflow) |
 | `git lfs locks` | See all currently locked files and who holds them | [Git LFS](#7--advanced-topics--git-lfs-for-altium--excel-files) |
@@ -285,11 +285,11 @@ git commit -m "updated schematic for ECR evt1 to evt2"
 
 ---
 
-#### `git push origin <branch>`
+#### `git push -u origin <branch>`
 Uploads your branch and commits to GitHub so the team can see your work.
 
 ```bash
-git push origin ECR-evt1-to-evt2
+git push -u origin ECR-evt1-to-evt2
 ```
 
 **What you'll see:**
@@ -447,7 +447,7 @@ Successfully rebased and updated refs/heads/main.
 | `git add .` | Stage all changed files |
 | `git status` | See what's changed and what's staged |
 | `git commit -m "message"` | Save a labeled snapshot |
-| `git push origin <branch>` | Upload your branch to GitHub |
+| `git push -u origin <branch>` | Upload your branch to GitHub |
 | `git fetch` | Check for remote updates (nothing changes yet) |
 | `git pull --rebase` | Pull latest from GitHub and sync your machine |
 
